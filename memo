@@ -1,0 +1,1 @@
+sudo apt install debhelper findutils autotools-dev autoconf automake libtool pkg-config libltdl-dev

@@ -1,0 +1,1 @@
+/home/keti/workspace/xenomai-stable-v3.1.x/kernel/drivers/can/sja1000/Makefile

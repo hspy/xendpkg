@@ -1,1 +1,0 @@
-/home/keti/workspace/build/xenomai-v3.0.9/kernel/cobalt/arch/x86/include/asm/xenomai/syscall32-table.h

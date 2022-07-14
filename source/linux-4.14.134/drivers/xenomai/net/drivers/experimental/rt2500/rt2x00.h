@@ -1,1 +1,0 @@
-/home/keti/workspace/build/xenomai-v3.0.9/kernel/drivers/net/drivers/experimental/rt2500/rt2x00.h

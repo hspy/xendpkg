@@ -132,7 +132,6 @@ ec_xenomai_example-main.o: main.c /usr/include/stdc-predef.h \
  /usr/include/x86_64-linux-gnu/bits/stdint-uintn.h \
  /usr/xenomai/include/cobalt/boilerplate/wrappers.h \
  /usr/xenomai/include/rtdm/uapi/rtdm.h \
- /usr/xenomai/include/trank/native/task.h \
  /usr/xenomai/include/alchemy/task.h \
  /usr/xenomai/include/boilerplate/list.h /usr/include/assert.h \
  /usr/xenomai/include/boilerplate/scope.h \
@@ -193,12 +192,7 @@ ec_xenomai_example-main.o: main.c /usr/include/stdc-predef.h \
  /usr/xenomai/include/boilerplate/avl-inner.h \
  /usr/xenomai/include/alchemy/timer.h \
  /usr/xenomai/include/alchemy/compat.h /usr/xenomai/include/trank/trank.h \
- /usr/xenomai/include/trank/native/types.h \
- /usr/xenomai/include/trank/native/sem.h \
- /usr/xenomai/include/alchemy/sem.h \
- /usr/xenomai/include/trank/native/mutex.h \
- /usr/xenomai/include/alchemy/mutex.h \
- /usr/xenomai/include/trank/native/timer.h \
+ /usr/xenomai/include/alchemy/sem.h /usr/xenomai/include/alchemy/mutex.h \
  /usr/xenomai/include/trank/rtdk.h \
  /usr/xenomai/include/trank/posix/pthread.h /usr/include/pthread.h \
  ../../include/ecrt.h
@@ -501,8 +495,6 @@ ec_xenomai_example-main.o: main.c /usr/include/stdc-predef.h \
 
 /usr/xenomai/include/rtdm/uapi/rtdm.h:
 
-/usr/xenomai/include/trank/native/task.h:
-
 /usr/xenomai/include/alchemy/task.h:
 
 /usr/xenomai/include/boilerplate/list.h:
@@ -643,17 +635,9 @@ ec_xenomai_example-main.o: main.c /usr/include/stdc-predef.h \
 
 /usr/xenomai/include/trank/trank.h:
 
-/usr/xenomai/include/trank/native/types.h:
-
-/usr/xenomai/include/trank/native/sem.h:
-
 /usr/xenomai/include/alchemy/sem.h:
 
-/usr/xenomai/include/trank/native/mutex.h:
-
 /usr/xenomai/include/alchemy/mutex.h:
-
-/usr/xenomai/include/trank/native/timer.h:
 
 /usr/xenomai/include/trank/rtdk.h:
 

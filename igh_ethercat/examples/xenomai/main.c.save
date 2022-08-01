@@ -2,7 +2,8 @@
  *
  *  $Id$
  *
- *  Copyright (C)      2011  IgH Andreas Stewering-Bone
+ *  Copyright (C) 2009-2010  Moehwald GmbH B. Benner
+ *                     2011  IgH Andreas Stewering-Bone
  *                     2012  Florian Pose <fp@igh-essen.com>
  *
  *  This file is part of the IgH EtherCAT master
@@ -28,28 +29,25 @@
  *****************************************************************************/
 
 #include <errno.h>
-#include <mqueue.h>
 #include <signal.h>
-#include <cobalt/pthread.h>
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
+#include <sys/resource.h>
+#include <sys/time.h>
+#include <sys/types.h>
 #include <unistd.h>
-#include <limits.h>
-#include <sys/ioctl.h>
 #include <sys/mman.h>
-#include <time.h>
-
 #include <rtdm/rtdm.h>
+#include <alchemy/task.h>
+#include <alchemy/sem.h>
+#include <alchemy/mutex.h>
+#include <alchemy/timer.h>
 #include <trank/rtdk.h>
+#include <trank/posix/pthread.h>
 
 #include "ecrt.h"
 
-#define NSEC_PER_SEC 1000000000
-
-static unsigned int cycle_us = 1000; /* 1 ms */
-
-static pthread_t cyclic_thread;
+RT_TASK my_task;
 
 static int run = 1;
 
@@ -74,7 +72,7 @@ static ec_slave_config_t *sc_dig_out_01 = NULL;
 #define DigOutSlave01_Pos 0, 1
 
 #define Beckhoff_EK1100 0x00000002, 0x044c2c52
-#define Beckhoff_EL2008 0x00000002, 0x07d83052
+#define Beckhoff_EL2004 0x00000002, 0x07d43052
 
 // offsets for PDO entries
 static unsigned int off_dig_out0 = 0;
@@ -82,15 +80,15 @@ static unsigned int off_dig_out0 = 0;
 // process data
 
 const static ec_pdo_entry_reg_t domain1_regs[] = {
-   {DigOutSlave01_Pos, Beckhoff_EL2008, 0x7000, 0x01, &off_dig_out0, NULL},
+   {DigOutSlave01_Pos, Beckhoff_EL2004, 0x7000, 0x01, &off_dig_out0, NULL},
    {}
 };
 
 /****************************************************************************/
 
-/* Slave 1, "EL2008"
+/* Slave 1, "EL2004"
  * Vendor ID:       0x00000002
- * Product code:    0x07d83052
+ * Product code:    0x07d43052
  * Revision number: 0x00100000
  */
 
@@ -159,47 +157,38 @@ void rt_check_master_state(void)
 
 /****************************************************************************/
 
-static void *my_thread(void *arg)
+void my_task_proc(void *arg)
 {
-    struct timespec next_period;
-    int cycle_counter = 0;
-	unsigned int blink = 0;
+	int cycle_counter = 0;
+    unsigned int blink = 0;
 
-    clock_gettime(CLOCK_REALTIME, &next_period);
+	rt_task_set_periodic(NULL, TM_NOW, 1000000); // ns
 
-    while (run) {
-        next_period.tv_nsec += cycle_us * 1000;
-        while (next_period.tv_nsec >= NSEC_PER_SEC) {
-			next_period.tv_nsec -= NSEC_PER_SEC;
-			next_period.tv_sec++;
-		}
+	while (run) {
+		rt_task_wait_period(NULL);
 
-        clock_nanosleep(CLOCK_REALTIME, TIMER_ABSTIME, &next_period, NULL);
+		cycle_counter++;
 
-        cycle_counter++;
+		// receive EtherCAT frames
+		ecrt_master_receive(master);
+		ecrt_domain_process(domain1);
 
-        // receive EtherCAT
-        ecrt_master_receive(master);
-        ecrt_domain_process(domain1);
+		rt_check_domain_state();
 
-        rt_check_domain_state();
-
-        if (!(cycle_counter % 1000)) {
+		if (!(cycle_counter % 1000)) {
 			rt_check_master_state();
 		}
 
-        if (!(cycle_counter % 200)) {
+		if (!(cycle_counter % 200)) {
 			blink = !blink;
 		}
 
-        EC_WRITE_U8(domain1_pd + off_dig_out0, blink ? 0x0 : 0x0F);
+		EC_WRITE_U8(domain1_pd + off_dig_out0, blink ? 0x0 : 0x0F);
 
-        // send process data
-        ecrt_domain_queue(domain1);
-        ecrt_master_send(master);
-    }
-
-    return NULL;
+		// send process data
+		ecrt_domain_queue(domain1);
+		ecrt_master_send(master);
+	}
 }
 
 /****************************************************************************
@@ -219,6 +208,9 @@ int main(int argc, char *argv[])
 {
     ec_slave_config_t *sc;
     int ret;
+
+    /* Perform auto-init of rt_print buffers if the task doesn't do so */
+    rt_print_auto_init(1);
 
     signal(SIGTERM, signal_handler);
     signal(SIGINT, signal_handler);
@@ -245,7 +237,7 @@ int main(int argc, char *argv[])
     }
 
     sc_dig_out_01 =
-        ecrt_master_slave_config(master, DigOutSlave01_Pos, Beckhoff_EL2008);
+        ecrt_master_slave_config(master, DigOutSlave01_Pos, Beckhoff_EL2004);
     if (!sc_dig_out_01) {
         fprintf(stderr, "Failed to get slave configuration.\n");
         return -1;
@@ -271,28 +263,25 @@ int main(int argc, char *argv[])
         return -1;
     }
 
-    /* Create cyclic RT-thread */
-    struct sched_param param = { .sched_priority = 82 };
+    ret = rt_task_create(&my_task, "my_task", 0, 80, T_U);
+    if (ret < 0) 
+        fprintf(stderr, "Failed to create task: %s\n", strerror(-ret));
+        return -1;
+    }
 
-    pthread_attr_t thattr;
-    pthread_attr_init(&thattr);
-    pthread_attr_setdetachstate(&thattr, PTHREAD_CREATE_JOINABLE);
-    pthread_attr_setinheritsched(&thattr, PTHREAD_EXPLICIT_SCHED);
-   //pthread_attr_setschedpolicy_ex(&thattr, SCHED_FIFO);
-   //pthread_setschedparam_ex(cyclic_thread, SCHED_FIFO, &param);
-    int ctr = 0;
-    ret = pthread_create(&cyclic_thread, &thattr, &my_thread, NULL);
-    if (ret) {
-        fprintf(stderr, "%s: pthread_create cyclic task failed\n",
-                strerror(-ret));
-		return 1;
+    printf("Starting my_task...\n");
+    ret = rt_task_start(&my_task, &my_task_proc, NULL);
+    if (ret < 0) {
+        fprintf(stderr, "Failed to start task: %s\n", strerror(-ret));
+        return -1;
     }
 
 	while (run) {
 		sched_yield();
 	}
 
-    pthread_join(cyclic_thread, NULL);
+    printf("Deleting realtime task...\n");
+    rt_task_delete(&my_task);
 
     printf("End of Program\n");
     ecrt_release_master(master);

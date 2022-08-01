@@ -50,7 +50,7 @@ endif
 endif
 
 KBUILD_EXTRA_SYMBOLS := \
-	/home/crevis/xendpkg/ethercat_working/ethercat/$(LINUX_SYMVERS) \
-	/home/crevis/xendpkg/ethercat_working/ethercat/master/$(LINUX_SYMVERS)
+	/home/crevis/dpkgxeno/igh_ethercat/$(LINUX_SYMVERS) \
+	/home/crevis/dpkgxeno/igh_ethercat/master/$(LINUX_SYMVERS)
 
 #------------------------------------------------------------------------------

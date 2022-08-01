@@ -250,13 +250,13 @@ distuninstallcheck_listfiles = find . -type f -print
 am__distuninstallcheck_listfiles = $(distuninstallcheck_listfiles) \
   | sed 's|^\./|$(prefix)/|' | grep -v '$(infodir)/dir$$'
 distcleancheck_listfiles = find . -type f -print
-ACLOCAL = ${SHELL} /home/crevis/xendpkg/ethercat_working/ethercat/autoconf/missing aclocal-1.15
+ACLOCAL = ${SHELL} /home/crevis/dpkgxeno/igh_ethercat/autoconf/missing aclocal-1.15
 AMTAR = $${TAR-tar}
 AM_DEFAULT_VERBOSITY = 1
 AR = ar
-AUTOCONF = ${SHELL} /home/crevis/xendpkg/ethercat_working/ethercat/autoconf/missing autoconf
-AUTOHEADER = ${SHELL} /home/crevis/xendpkg/ethercat_working/ethercat/autoconf/missing autoheader
-AUTOMAKE = ${SHELL} /home/crevis/xendpkg/ethercat_working/ethercat/autoconf/missing automake-1.15
+AUTOCONF = ${SHELL} /home/crevis/dpkgxeno/igh_ethercat/autoconf/missing autoconf
+AUTOHEADER = ${SHELL} /home/crevis/dpkgxeno/igh_ethercat/autoconf/missing autoheader
+AUTOMAKE = ${SHELL} /home/crevis/dpkgxeno/igh_ethercat/autoconf/missing automake-1.15
 AWK = mawk
 CC = gcc
 CCDEPMODE = depmode=gcc3
@@ -273,18 +273,18 @@ DEPDIR = .deps
 DLLTOOL = false
 DSYMUTIL = 
 DUMPBIN = 
-E1000E_LAYOUT = 2
+E1000E_LAYOUT = 0
 ECHO_C = 
 ECHO_N = -n
 ECHO_T = 
 EGREP = /bin/grep -E
-ENABLE_8139TOO = 1
+ENABLE_8139TOO = 0
 ENABLE_CCAT = 0
 ENABLE_CX2100 = 0
 ENABLE_DEBUG_IF = 0
 ENABLE_E100 = 0
 ENABLE_E1000 = 0
-ENABLE_E1000E = 1
+ENABLE_E1000E = 0
 ENABLE_EOE = 1
 ENABLE_GENERIC = 1
 ENABLE_IGB = 1
@@ -323,7 +323,7 @@ LIPO =
 LN_S = ln -s
 LTLIBOBJS = 
 LT_SYS_LIBRARY_PATH = 
-MAKEINFO = ${SHELL} /home/crevis/xendpkg/ethercat_working/ethercat/autoconf/missing makeinfo
+MAKEINFO = ${SHELL} /home/crevis/dpkgxeno/igh_ethercat/autoconf/missing makeinfo
 MANIFEST_TOOL = :
 MKDIR_P = /bin/mkdir -p
 NM = /usr/bin/nm -B
@@ -358,10 +358,10 @@ XENOMAI_POSIX_CFLAGS = -I/usr/xenomai/include/cobalt -I/usr/xenomai/include -D_G
 XENOMAI_POSIX_LDFLAGS = -Wl,--no-as-needed -Wl,@/usr/xenomai/lib/cobalt.wrappers -Wl,@/usr/xenomai/lib/modechk.wrappers  /usr/xenomai/lib/xenomai/bootstrap-pic.o  -L/usr/xenomai/lib -lcobalt -lmodechk -lpthread -lrt   
 XENOMAI_RTDM_CFLAGS = -I/usr/xenomai/include/cobalt -I/usr/xenomai/include -D_GNU_SOURCE -D_REENTRANT -fasynchronous-unwind-tables -D__COBALT__ -D__COBALT_WRAP__
 XENOMAI_RTDM_LDFLAGS = -Wl,--no-as-needed -Wl,@/usr/xenomai/lib/cobalt.wrappers -Wl,@/usr/xenomai/lib/modechk.wrappers  /usr/xenomai/lib/xenomai/bootstrap-pic.o  -L/usr/xenomai/lib -lcobalt -lmodechk -lpthread -lrt   
-abs_builddir = /home/crevis/xendpkg/ethercat_working/ethercat
-abs_srcdir = /home/crevis/xendpkg/ethercat_working/ethercat
-abs_top_builddir = /home/crevis/xendpkg/ethercat_working/ethercat
-abs_top_srcdir = /home/crevis/xendpkg/ethercat_working/ethercat
+abs_builddir = /home/crevis/dpkgxeno/igh_ethercat
+abs_srcdir = /home/crevis/dpkgxeno/igh_ethercat
+abs_top_builddir = /home/crevis/dpkgxeno/igh_ethercat
+abs_top_srcdir = /home/crevis/dpkgxeno/igh_ethercat
 ac_ct_AR = ar
 ac_ct_CC = gcc
 ac_ct_CXX = g++
@@ -391,7 +391,7 @@ host_vendor = pc
 htmldir = ${docdir}
 includedir = ${prefix}/include
 infodir = ${datarootdir}/info
-install_sh = ${SHELL} /home/crevis/xendpkg/ethercat_working/ethercat/autoconf/install-sh
+install_sh = ${SHELL} /home/crevis/dpkgxeno/igh_ethercat/autoconf/install-sh
 libdir = ${exec_prefix}/lib
 libexecdir = ${exec_prefix}/libexec
 localedir = ${datarootdir}/locale
@@ -941,14 +941,14 @@ uninstall-am:
 
 
 modules:
-	$(MAKE) -C "$(LINUX_SOURCE_DIR)" M="/home/crevis/xendpkg/ethercat_working/ethercat" modules
+	$(MAKE) -C "$(LINUX_SOURCE_DIR)" M="/home/crevis/dpkgxeno/igh_ethercat" modules
 
 modules_install:
-	$(MAKE) -C "$(LINUX_SOURCE_DIR)" M="/home/crevis/xendpkg/ethercat_working/ethercat" \
+	$(MAKE) -C "$(LINUX_SOURCE_DIR)" M="/home/crevis/dpkgxeno/igh_ethercat" \
 		INSTALL_MOD_DIR="$(INSTALL_MOD_DIR)" modules_install
 
 clean-local:
-	$(MAKE) -C "$(LINUX_SOURCE_DIR)" M="/home/crevis/xendpkg/ethercat_working/ethercat" clean
+	$(MAKE) -C "$(LINUX_SOURCE_DIR)" M="/home/crevis/dpkgxeno/igh_ethercat" clean
 
 mydist:
 	hg log --style=changelog $(srcdir) > ChangeLog

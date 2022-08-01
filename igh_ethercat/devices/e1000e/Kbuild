@@ -39,7 +39,7 @@ REV := $(shell if test -s $(TOPDIR)/revision; then \
 		hg id -i $(TOPDIR) 2>/dev/null || echo "unknown"; \
 	fi)
 
-ifeq (1,1)
+ifeq (0,1)
 	EC_E1000E_OBJ := \
 		82571-4.19-ethercat.o \
 		ethtool-4.19-ethercat.o \
@@ -48,7 +48,7 @@ ifeq (1,1)
 		param-4.19-ethercat.o \
 		phy-4.19-ethercat.o
 
-	ifeq (2,2)
+	ifeq (0,2)
 		EC_E1000E_OBJ += \
 			80003es2lan-4.19-ethercat.o \
 			mac-4.19-ethercat.o \
@@ -57,7 +57,7 @@ ifeq (1,1)
 			ptp-4.19-ethercat.o
 	endif
 
-	ifeq (2,1)
+	ifeq (0,1)
 		EC_E1000E_OBJ += \
 			80003es2lan-4.19-ethercat.o \
 			mac-4.19-ethercat.o \
@@ -65,7 +65,7 @@ ifeq (1,1)
 			nvm-4.19-ethercat.o
 	endif
 
-	ifeq (2,0)
+	ifeq (0,0)
 		EC_E1000E_OBJ += \
 			es2lan-4.19-ethercat.o \
 			lib-4.19-ethercat.o
@@ -78,7 +78,7 @@ ifeq (1,1)
 endif
 
 KBUILD_EXTRA_SYMBOLS := \
-	/home/crevis/xendpkg/ethercat_working/ethercat/$(LINUX_SYMVERS) \
-	/home/crevis/xendpkg/ethercat_working/ethercat/master/$(LINUX_SYMVERS)
+	/home/crevis/dpkgxeno/igh_ethercat/$(LINUX_SYMVERS) \
+	/home/crevis/dpkgxeno/igh_ethercat/master/$(LINUX_SYMVERS)
 
 #------------------------------------------------------------------------------

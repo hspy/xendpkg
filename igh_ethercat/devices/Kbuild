@@ -44,7 +44,7 @@ ifeq (1,1)
 	CFLAGS_$(EC_GENERIC_OBJ) = -DREV=$(REV)
 endif
 
-ifeq (1,1)
+ifeq (0,1)
 	EC_8139TOO_OBJ := 8139too-4.19-ethercat.o
 	obj-m += ec_8139too.o
 	ec_8139too-objs := $(EC_8139TOO_OBJ)
@@ -66,7 +66,7 @@ ifeq (0,1)
 	obj-m += e1000/
 endif
 
-ifeq (1,1)
+ifeq (0,1)
 	obj-m += e1000e/
 endif
 
@@ -93,7 +93,7 @@ ifeq (0,1)
 endif
 
 KBUILD_EXTRA_SYMBOLS := \
-	/home/crevis/xendpkg/ethercat_working/ethercat/$(LINUX_SYMVERS) \
-	/home/crevis/xendpkg/ethercat_working/ethercat/master/$(LINUX_SYMVERS)
+	/home/crevis/dpkgxeno/igh_ethercat/$(LINUX_SYMVERS) \
+	/home/crevis/dpkgxeno/igh_ethercat/master/$(LINUX_SYMVERS)
 
 #------------------------------------------------------------------------------
